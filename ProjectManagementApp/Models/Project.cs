@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace ProjectManagementApp.Models
 {
@@ -11,5 +12,7 @@ namespace ProjectManagementApp.Models
         public string Description { get; set; }
 
         public ProjectStage Stage { get; set; }
+
+        public ICollection<ProjectUser> ProjectUser { get; set; }
     }
 }
