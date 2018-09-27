@@ -40,7 +40,7 @@ namespace ProjectManagementApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager)
         //public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -58,7 +58,6 @@ namespace ProjectManagementApp
 
             app.UseAuthentication();
 
-            MyIdentityDataInitializer.SeedData(userManager, roleManager);
 
             app.UseMvc(routes =>
             {
@@ -66,6 +65,26 @@ namespace ProjectManagementApp
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            CreateUsers(userManager);
+        }
+
+        private async Task CreateUsers(UserManager<ApplicationUser> userManager)
+        {
+            if (userManager.FindByNameAsync("admin@example.com").Result == null)
+            {
+                ApplicationUser user = new ApplicationUser();
+                user.UserName = "admin@example.com";
+                user.Email = "admin@example.com";
+
+                IdentityResult result = userManager.CreateAsync
+                (user, "Password1!").Result;
+
+                if (result.Succeeded)
+                {
+                    //default user created   
+                }
+            }
         }
     }
 }
