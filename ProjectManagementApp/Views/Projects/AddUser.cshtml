@@ -1,0 +1,17 @@
+@model ProjectAddUserViewModel
+
+<h4>Add User</h4>
+
+<p>Add someone new to the project.</p>
+
+<form>
+
+    <select class="form-group" asp-for="Id"
+        asp-items="@(new SelectList(Model.Users,"Id","Email"))">
+    </select>
+
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-default" />
+    </div>
+
+</form>
