@@ -162,5 +162,27 @@ namespace ProjectManagementApp.Controllers
             viewModel.Users = await _userManager.Users.ToListAsync();
             return View(viewModel);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddUser(int id, [Bind("UserId,ProjectId")] ProjectAddUserViewModel viewModel)
+        {
+            var project = await _context.Projects.Include(e => e.ProjectUser).Where(e => e.Id == id).FirstOrDefaultAsync();
+            if(project == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(viewModel.UserId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            project.ProjectUser.Add(new ProjectUser { User = user, Project = project });
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", new { id = id });
+        }
     }
 }

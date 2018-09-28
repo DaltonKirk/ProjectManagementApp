@@ -4,9 +4,8 @@
 
 <p>Add someone new to the project.</p>
 
-<form>
-
-    <select class="form-group" asp-for="Id"
+<form asp-action="AddUser">
+    <select class="form-group" asp-for="UserId"
         asp-items="@(new SelectList(Model.Users,"Id","Email"))">
     </select>
 
