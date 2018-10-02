@@ -158,8 +158,15 @@ namespace ProjectManagementApp.Controllers
 
         public async Task<IActionResult> AddUser(int id)
         {
+            //Filter users not assigned to project.
             var viewModel = new ProjectAddUserViewModel();
+            var project = await _context.Projects.Include(e => e.ProjectUser).Where(e => e.Id == id).FirstOrDefaultAsync();
+            var userIdsOnProject = project.ProjectUser.Select(e => e.UserId).ToList();
+            
             viewModel.Users = await _userManager.Users.ToListAsync();
+
+            viewModel.Users = viewModel.Users.Where(e => !userIdsOnProject.Contains(e.Id)).ToList();
+            
             return View(viewModel);
         }
 
